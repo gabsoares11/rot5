@@ -38,22 +38,29 @@ public class QueueUsingStack<T> implements Queue<T> {
 		
 		T elem = null;
 		
-		if (stack2.isEmpty())
-			try {
-				stack2.push(stack1.pop());
-			} catch (StackOverflowException | StackUnderflowException e) {
-				e.printStackTrace();
-			}
+		if (stack2.isEmpty()) {
+				copyElements(stack1, stack2); // inverte a ordem dos elementos
+				
+				try {
+					elem = stack2.pop(); // remove o elemento mais antigo
+				} catch (StackUnderflowException e) {
+					throw new QueueUnderflowException();
+				} 
+				
+				copyElements(stack2, stack1); // copia de volta para a pilha original
+		}
 		
-		return stack2.pop();
+		return elem;
 	}
 
 	@Override
 	public T head() {
 		T elem = null;
 		
-		if (!stack2.isEmpty()) {
+		if (stack2.isEmpty()) {
+			copyElements(stack1, stack2);
 			elem = stack2.top();
+			copyElements(stack2, stack1);	
 		}
 		
 		return elem;
